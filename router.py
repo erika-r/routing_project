@@ -60,7 +60,13 @@ class Graph:
         if path:        #if there is a path
             path.appendleft(current_vertex)
 
-        return "->".join(list(path)),distances[dest]
+        #change total distance from inf to 0 or from float to int
+        if distances[dest] == inf:
+            total_distance = 0
+        else:
+            total_distance = int(distances[dest])
+
+        return "->".join(list(path)),total_distance
 
 class Router:
 
@@ -99,11 +105,19 @@ def main():
     graph.add_edge("c", "f", 2)
     graph.add_edge("d", "e", 6)
     graph.add_edge("e", "f", 9)
-    router = Router("a",graph)
 
-    router.print_routing_table()
+    #2 routers
+    router = Router("a",graph)
+    router_two = Router("b",graph)
+
+
+    # router.print_routing_table()
+    router_two.print_routing_table()
+    
+    #remove "c" router
     router.remove_router("c")
-    router.get_path("f")
+
+    router_two.print_routing_table()
 
 if __name__ == main():
     main()
