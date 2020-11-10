@@ -85,6 +85,9 @@ class Router:
         df = DataFrame(data,columns=["from","to","cost","path"])
         print(df)
 
+    def remove_router(self,router):
+        self.graph.edges = [edge for edge in self.graph.edges if edge.start != router if edge.end != router]    #remove all pairs with router
+
 def main():
     graph = Graph()
     graph.add_edge("a", "b", 7)
@@ -98,8 +101,9 @@ def main():
     graph.add_edge("e", "f", 9)
     router = Router("a",graph)
 
-    # router.get_path("f")
     router.print_routing_table()
+    router.remove_router("c")
+    router.get_path("f")
 
 if __name__ == main():
     main()
