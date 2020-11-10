@@ -1,5 +1,6 @@
 from collections import deque       #used to remove from beginning or end of list
 from math import inf    #used as default distance between routers
+from pandas import DataFrame
 
 class Edge:
 
@@ -59,7 +60,7 @@ class Graph:
         if path:        #if there is a path
             path.appendleft(current_vertex)
 
-        return list(path),distances[dest]
+        return "->".join(list(path)),distances[dest]
 
 class Router:
 
@@ -71,8 +72,18 @@ class Router:
         path,cost = self.graph.dijkstra(self.name,dest)
         print("Start: {}".format(self.name))
         print("End: {}".format(dest))
-        print("Path: {}".format("->".join(path)))
+        print("Path: {}".format(path))
         print("Cost: {}\n".format(cost))
+
+    #create dataframe
+    def print_routing_table(self):
+        vertices = [vertex for vertex in self.graph.vertices if vertex != self.name]    #all vertices except current
+        data = {"from": [self.name]* (len(self.graph.vertices)-1),        #-1 because we do not need self.name -> self.name
+                "to": vertices,
+                "cost": [self.graph.dijkstra(self.name,vertex)[1] for vertex in vertices],
+                "path": [self.graph.dijkstra(self.name,vertex)[0] for vertex in vertices]}
+        df = DataFrame(data,columns=["from","to","cost","path"])
+        print(df)
 
 def main():
     graph = Graph()
@@ -87,7 +98,8 @@ def main():
     graph.add_edge("e", "f", 9)
     router = Router("a",graph)
 
-    router.get_path("f")
+    # router.get_path("f")
+    router.print_routing_table()
 
 if __name__ == main():
     main()
